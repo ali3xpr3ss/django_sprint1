@@ -45,7 +45,6 @@ posts = [
 
 
 def index(request):
-    # Сортируем посты в обратном порядке (новые сначала)
     sorted_posts = sorted(posts, key=lambda x: x['id'], reverse=True)
     context = {
         'posts': sorted_posts
@@ -56,10 +55,9 @@ def index(request):
 def post_detail(request, post_id):
     post = next((post for post in posts if post['id'] == post_id), None)
     if post is None:
-        # Если пост не найден, можно вернуть 404
         from django.http import Http404
         raise Http404("Пост не найден")
-    
+
     context = {
         'post': post
     }
@@ -67,9 +65,11 @@ def post_detail(request, post_id):
 
 
 def category_posts(request, category_slug):
-    category_posts = [post for post in posts if post['category'] == category_slug]
+    category_posts_list = [
+        post for post in posts if post['category'] == category_slug
+    ]
     context = {
-        'posts': category_posts,
+        'posts': category_posts_list,
         'category_slug': category_slug
     }
     return render(request, 'blog/category.html', context)
